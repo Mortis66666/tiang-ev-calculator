@@ -119,7 +119,10 @@ function calculateEV() {
     }
 
     const totalOuts =
-        52 - 2 - calculatorHistory.length * 2 - discardHistory.length;
+        52 * deckCount - // total cards
+        2 - // Current tiangs
+        calculatorHistory.length * 2 - // Previous tiangs
+        discardHistory.length; // Discarded cards
     const ev = (2 * winOuts - tiangOuts) / totalOuts - 1;
     text.innerHTML = `[${cardOrder[min - 1]}-${cardOrder[max - 1]}] EV: ${ev.toFixed(2)}`;
 }
@@ -152,9 +155,6 @@ cardList.addEventListener("click", event => {
         }
 
         if (mode === "discard") {
-            const selectedCard = event.target;
-            const cardValue = selectedCard.dataset.value;
-
             discardHistory.push(cardValue);
             cardCounter[cardValue]--;
         } else if (mode === "calculator") {
