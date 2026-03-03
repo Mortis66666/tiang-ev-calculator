@@ -46,7 +46,7 @@ For those who prefer the command line, `tiang.sh` provides a fully featured term
 
 **Instant Run (via curl):**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/yourusername/tiang-ev-calculator/master/tiang.sh | bash
+curl -fsSL https://raw.githubusercontent.com/barium-bromide/tiang-ev-calculator/refs/heads/master/tiang.sh | bash
 ```
 
 **Run Locally:**
@@ -92,4 +92,4 @@ Check [NOTICE](NOTICE) for license as well.
 
 ---
 
-> **Disclaimer:** This calculator is intended for **educational and entertainment purposes only**. It does not guarantee winnings and should not be used for gambling. Please play responsibly.
+> **Disclaimer:** This calculator is intended for **educational and entertainment purposes only**. It does not guarantee winnings and should not be used for gambling. Please play responsibly. Note, This project is done using vibecoding, I did not check the code.
