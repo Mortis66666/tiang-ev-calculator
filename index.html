@@ -3,97 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Setup</title>
+    <title>Setup - Tiang EV Calculator</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
+        /* Setup Specific Styles that extend style.css */
+        /* Body styles are now handled by .container in style.css and reset */
+        
+        main {
+            flex-grow: 1;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #f7f7f7;
+            flex-direction: column;
+            width: 100%;
+            padding: 16px; /* Add some padding for small screens */
+            overflow-y: auto; /* Allow scrolling if form is tall */
         }
+
         form {
-            border: 1px solid #ccc;
+            margin: auto; /* Center form safely allowing scroll */
+            border: 1px solid var(--color-border);
             border-radius: 8px;
             padding: 32px 24px;
-            background: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background-color: var(--color-surface);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* inline simplified shadow for now, or move to css */
             display: flex;
             flex-direction: column;
             gap: 16px;
-            min-width: 280px;
+            width: 100%;
+            max-width: 320px;
         }
+
+        /* Dark mode shadow adjustment */
+        [data-theme="dark"] form,
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) form {
+                 box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            }
+        }
+
+        h2 {
+            margin: 0 0 8px 0;
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--color-text);
+        }
+
         label {
             font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: -8px; /* Visual grouping */
+            display: block;
         }
-        input, select, button {
-            padding: 8px;
+
+        form input, form select, form button {
+            padding: 10px;
             border-radius: 4px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--color-border);
+            background-color: var(--color-surface);
+            color: var(--color-text);
             font-size: 1rem;
+            width: 100%;
         }
-        button {
-            background: #1976d2;
-            color: #fff;
+
+        form input:focus, form select:focus {
+            outline: 2px solid var(--color-primary);
+            border-color: transparent;
+        }
+
+        form button {
+            background-color: var(--color-primary);
+            color: var(--color-text-inverse);
             border: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: background 0.2s;
+            margin-top: 8px;
+            transition: background-color 0.2s;
         }
-        button:hover {
-            background: #1565c0;
+
+        form button:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <form>
-        <label for="n-deck">Number of decks:</label>
-        <input type="number" id="deck-count" name="n-deck" min="1" value="1">
-        <label>Card Order</label>
-        <!--Dropdown-->
-        <select id="card-order" name="card-order">
-            <option value="A23456789TJQK">A-K</option>
-            <option value="23456789TJQKA">2-A</option>
-            <option value="custom">Custom</option>
-        </select>
+    <div class="container">
+        <div class="header">
+            <span style="font-weight: bold; font-size: 1.1rem;">Tiang EV Calculator</span>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                <span class="icon-sun">☀️</span>
+                <span class="icon-moon">🌙</span>
+            </button>
+        </div>
 
-        <!--Custom card order input-->
-        <input type="text" id="custom-card-order" name="custom-card-order" placeholder="e.x 23456789TJQKA" style="display: none;">
-        
-        <button type="submit">Start</button>
-    </form>
+        <main>
+            <form id="setup-form">
+                <h2>Game Setup</h2>
+                
+                <div>
+                    <label for="deck-count">Number of decks</label>
+                    <input type="number" id="deck-count" name="deck-count" min="1" value="1" required style="margin-top: 8px;">
+                </div>
+                
+                <div>
+                    <label for="card-order">Card Order</label>
+                    <select id="card-order" name="card-order" style="margin-top: 8px;">
+                        <option value="A23456789TJQK">A - K</option>
+                        <option value="23456789TJQKA">2 - A</option>
+                        <option value="custom">Custom...</option>
+                    </select>
+                </div>
 
-    <script>
-        const form = document.querySelector("form");
-        form.addEventListener("submit", (event) => {
-            event.preventDefault();
-            const deckCount = document.getElementById("deck-count").value;
-            let cardOrder = document.getElementById("card-order").value;
+                <input type="text" id="custom-card-order" name="custom-card-order" 
+                       placeholder="e.g. 23456789TJQKA" 
+                       class="hidden">
+                
+                <button type="submit">Start Calculator</button>
+            </form>
+        </main>
+    </div>
 
-            if (cardOrder === "custom") {
-                cardOrder = document.getElementById("custom-card-order").value;
-
-                if (cardOrder.length !== 13 || !/^[A23456789TJQK]+$/.test(cardOrder)) {
-                    alert("Invalid custom card order. Please enter a valid order containing A, 2-9, T, J, Q, K.");
-                    return;
-                }
-            }
-
-            localStorage.setItem("deckCount", deckCount);
-            localStorage.setItem("cardOrder", cardOrder);
-            window.location.href = "calculator.html";
-        });
-
-        // Show custom card order input if "Custom" is selected
-        const cardOrderSelect = document.getElementById("card-order");
-        const customCardOrderInput = document.getElementById("custom-card-order");
-        cardOrderSelect.addEventListener("change", () => {
-            if (cardOrderSelect.value === "custom") {
-                customCardOrderInput.style.display = "block";
-            } else {
-                customCardOrderInput.style.display = "none";
-            }
-        });
-    </script>
+    <script src="script.js" defer></script>
 </body>
 </html>
